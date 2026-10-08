@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VoteSecure - Online Voting System</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    color:#222;
+    transition:.3s;
+}
+
+button{
+    cursor:pointer;
+    border:none;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* ================= AUTH ================= */
+
+#authPage{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#16222a,#3a6073);
+}
+
+.auth-box{
+    width:390px;
+    max-width:92%;
+    background:white;
+    padding:35px;
+    border-radius:18px;
+    box-shadow:0 15px 45px rgba(0,0,0,.3);
+}
+
+.logo{
+    text-align:center;
+    font-size:30px;
+    font-weight:bold;
+    color:#1769aa;
+    margin-bottom:10px;
+}
+
+.auth-box h2{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.auth-box input{
+    width:100%;
+    padding:13px;
+    margin:8px 0;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+.password-box{
+    position:relative;
+}
+
+.password-box span{
+    position:absolute;
+    right:12px;
+    top:18px;
+    cursor:pointer;
+}
+
+.primary-btn{
+    width:100%;
+    padding:13px;
+    background:#1769aa;
+    color:white;
+    border-radius:8px;
+    margin-top:10px;
+    font-size:15px;
+}
+
+.auth-switch{
+    text-align:center;
+    margin-top:18px;
+}
+
+.auth-switch span{
+    color:#1769aa;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar{
+    height:65px;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+    position:sticky;
+    top:0;
+    z-index:20;
+}
+
+.nav-logo{
+    font-size:24px;
+    font-weight:bold;
+    color:#1769aa;
+}
+
+.nav-actions{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.nav-btn{
+    background:none;
+    font-size:20px;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    position:fixed;
+    top:65px;
+    left:0;
+    bottom:0;
+    width:220px;
+    background:#16222a;
+    padding:20px 10px;
+    color:white;
+}
+
+.sidebar button{
+    width:100%;
+    background:transparent;
+    color:white;
+    text-align:left;
+    padding:13px;
+    border-radius:7px;
+    margin:3px 0;
+}
+
+.sidebar button:hover{
+    background:#1769aa;
+}
+
+/* ================= CONTENT ================= */
+
+.content{
+    margin-left:220px;
+    padding:30px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+/* ================= HERO ================= */
+
+.hero{
+    background:linear-gradient(120deg,#1769aa,#3f8fc7);
+    color:white;
+    padding:35px;
+    border-radius:18px;
+    margin-bottom:25px;
+}
+
+.hero h1{
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+/* ================= STATS ================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat{
+    background:white;
+    padding:22px;
+    border-radius:14px;
+    box-shadow:0 3px 10px rgba(0,0,0,.06);
+}
+
+.stat h3{
+    color:#777;
+}
+
+.stat p{
+    font-size:28px;
+    font-weight:bold;
+    color:#1769aa;
+    margin-top:8px;
+}
+
+/* ================= COUNTDOWN ================= */
+
+.countdown{
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    margin-bottom:25px;
+    text-align:center;
+}
+
+.countdown-number{
+    font-size:28px;
+    color:#1769aa;
+    font-weight:bold;
+}
+
+/* ================= SEARCH ================= */
+
+.search{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.search input{
+    flex:1;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+/* ================= CANDIDATES ================= */
+
+.candidate-grid{
+    display:grid;
+    grid-template-columns:
+    repeat(auto-fill,minmax(250px,1fr));
+    gap:20px;
+}
+
+.candidate{
+    background:white;
+    border-radius:15px;
+    padding:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.candidate-symbol{
+    height:100px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:55px;
+    background:#eef5fb;
+    border-radius:12px;
+    margin-bottom:15px;
+}
+
+.candidate h3{
+    margin-bottom:7px;
+}
+
+.party{
+    color:#1769aa;
+    font-weight:bold;
+}
+
+.vote-btn{
+    width:100%;
+    background:#1769aa;
+    color:white;
+    padding:11px;
+    border-radius:7px;
+    margin-top:15px;
+}
+
+.vote-btn:hover{
+    background:#0f4e7e;
+}
+
+/* ================= RESULT ================= */
+
+.result-card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:15px;
+}
+
+.progress{
+    height:15px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:10px;
+}
+
+.progress-bar{
+    height:100%;
+    background:#1769aa;
+}
+
+/* ================= PROFILE ================= */
+
+.profile-box{
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    max-width:600px;
+}
+
+.profile-box input{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border:1px solid #ddd;
+    border-radius:8px;
+}
+
+/* ================= TABLE ================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+th,td{
+    padding:13px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+}
+
+th{
+    background:#1769aa;
+    color:white;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:100;
+}
+
+.modal-box{
+    background:white;
+    width:420px;
+    max-width:90%;
+    padding:25px;
+    border-radius:15px;
+}
+
+.close{
+    float:right;
+    font-size:25px;
+    cursor:pointer;
+}
+
+/* ================= DARK ================= */
+
+body.dark{
+    background:#101417;
+    color:white;
+}
+
+body.dark .navbar,
+body.dark .stat,
+body.dark .countdown,
+body.dark .candidate,
+body.dark .result-card,
+body.dark .profile-box,
+body.dark table,
+body.dark .modal-box{
+    background:#1c2429;
+    color:white;
+}
+
+body.dark input{
+    background:#293238;
+    color:white;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:800px){
+
+    .sidebar{
+        width:65px;
+    }
+
+    .sidebar button{
+        font-size:0;
+        text-align:center;
+    }
+
+    .sidebar button:first-letter{
+        font-size:20px;
+    }
+
+    .content{
+        margin-left:65px;
+        padding:15px;
+    }
+
+    .navbar{
+        padding:0 15px;
+    }
+
+    .hero h1{
+        font-size:25px;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+
+<!-- ================= LOGIN ================= -->
+
+<section id="authPage">
+
+<div class="auth-box">
+
+<div class="logo">
+🗳️ VoteSecure
+</div>
+
+<div id="loginForm">
+
+<h2>Voter Login</h2>
+
+<input
+id="loginEmail"
+type="email"
+placeholder="Email"
+>
+
+<div class="password-box">
+
+<input
+id="loginPassword"
+type="password"
+placeholder="Password"
+>
+
+<span onclick="togglePassword('loginPassword')">
+👁️
+</span>
+
+</div>
+
+<button
+class="primary-btn"
+onclick="login()"
+>
+Login
+</button>
+
+<p class="auth-switch">
+
+New voter?
+
+<span onclick="showSignup()">
+Create Account
+</span>
+
+</p>
+
+<p style="text-align:center;margin-top:15px;font-size:13px">
+
+Demo:
+admin@votesecure.com / admin123
+
+</p>
+
+</div>
+
+
+<!-- SIGNUP -->
+
+<div id="signupForm" class="hidden">
+
+<h2>Voter Registration</h2>
+
+<input
+id="signupName"
+placeholder="Full Name"
+>
+
+<input
+id="signupEmail"
+type="email"
+placeholder="Email"
+>
+
+<input
+id="signupVoterId"
+placeholder="Voter ID"
+>
+
+<div class="password-box">
+
+<input
+id="signupPassword"
+type="password"
+placeholder="Password"
+>
+
+<span onclick="togglePassword('signupPassword')">
+👁️
+</span>
+
+</div>
+
+<button
+class="primary-btn"
+onclick="signup()"
+>
+Register
+</button>
+
+<p class="auth-switch">
+
+Already registered?
+
+<span onclick="showLogin()">
+Login
+</span>
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ================= APP ================= -->
+
+<section id="app" class="hidden">
+
+<nav class="navbar">
+
+<div class="nav-logo">
+🗳️ VoteSecure
+</div>
+
+<div class="nav-actions">
+
+<button
+class="nav-btn"
+onclick="toggleDark()"
+>
+🌙
+</button>
+
+<span id="userName"></span>
+
+</div>
+
+</nav>
+
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+<button onclick="showPage('dashboard')">
+🏠 Dashboard
+</button>
+
+<button onclick="showPage('vote')">
+🗳️ Vote
+</button>
+
+<button onclick="showPage('results')">
+📊 Results
+</button>
+
+<button onclick="showPage('history')">
+📋 Vote History
+</button>
+
+<button onclick="showPage('profile')">
+👤 Profile
+</button>
+
+<button onclick="showPage('notifications')">
+🔔 Notifications
+</button>
+
+<button onclick="showPage('admin')">
+🛡️ Admin
+</button>
+
+<button onclick="logout()">
+🚪 Logout
+</button>
+
+</aside>
+
+
+<main class="content">
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<div id="dashboard" class="page active">
+
+<div class="hero">
+
+<h1>
+Welcome to VoteSecure 🗳️
+</h1>
+
+<p>
+A modern online voting system for educational purposes.
+</p>
+
+</div>
+
+
+<div class="countdown">
+
+<h3>Election Ends In</h3>
+
+<p
+id="countdown"
+class="countdown-number"
+>
+Loading...
+</p>
+
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<h3>Total Voters</h3>
+
+<p id="totalVoters">
+0
+</p>
+
+</div>
+
+
+<div class="stat">
+
+<h3>Total Votes</h3>
+
+<p id="totalVotes">
+0
+</p>
+
+</div>
+
+
+<div class="stat">
+
+<h3>Candidates</h3>
+
+<p id="candidateCount">
+0
+</p>
+
+</div>
+
+
+<div class="stat">
+
+<h3>Participation</h3>
+
+<p id="participation">
+0%
+</p>
+
+</div>
+
+</div>
+
+
+<div class="result-card">
+
+<h2>🔔 Election Notice</h2>
+
+<br>
+
+<p>
+Please review all candidates before casting your vote.
+</p>
+
+<br>
+
+<p>
+You can cast your vote only once.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- ================= VOTE ================= -->
+
+<div id="vote" class="page">
+
+<h1>🗳️ Cast Your Vote</h1>
+
+<br>
+
+<div class="search">
+
+<input
+id="candidateSearch"
+placeholder="Search candidate..."
+oninput="renderCandidates()"
+>
+
+</div>
+
+<div
+id="candidateGrid"
+class="candidate-grid"
+>
+</div>
+
+</div>
+
+
+<!-- ================= RESULTS ================= -->
+
+<div id="results" class="page">
+
+<h1>📊 Election Results</h1>
+
+<br>
+
+<div id="resultsContainer"></div>
+
+</div>
+
+
+<!-- ================= HISTORY ================= -->
+
+<div id="history" class="page">
+
+<h1>📋 Vote History</h1>
+
+<br>
+
+<div id="historyContainer"></div>
+
+</div>
+
+
+<!-- ================= PROFILE ================= -->
+
+<div id="profile" class="page">
+
+<h1>👤 My Profile</h1>
+
+<br>
+
+<div class="profile-box">
+
+<input
+id="profileName"
+placeholder="Name"
+>
+
+<input
+id="profileEmail"
+placeholder="Email"
+readonly
+>
+
+<input
+id="profileVoterId"
+placeholder="Voter ID"
+readonly
+>
+
+<input
+id="profilePhone"
+placeholder="Phone Number"
+>
+
+<button
+class="primary-btn"
+onclick="saveProfile()"
+>
+Save Profile
+</button>
+
+<br><br>
+
+<button
+class="primary-btn"
+onclick="changePassword()"
+>
+Change Password
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ================= NOTIFICATIONS ================= -->
+
+<div id="notifications" class="page">
+
+<h1>🔔 Notifications</h1>
+
+<br>
+
+<div class="result-card">
+
+<h3>🗳️ Election Open</h3>
+
+<p>
+Voting is currently available.
+</p>
+
+</div>
+
+<div class="result-card">
+
+<h3>🔐 Security Reminder</h3>
+
+<p>
+Never share your password or voter credentials.
+</p>
+
+</div>
+
+<div class="result-card">
+
+<h3>📊 Results</h3>
+
+<p>
+Election results will be displayed on the results page.
+</p>
+
+</div>
+
+</div>
+
+
+<!-- ================= ADMIN ================= -->
+
+<div id="admin" class="page">
+
+<h1>🛡️ Admin Dashboard</h1>
+
+<br>
+
+<div class="stats">
+
+<div class="stat">
+
+<h3>Registered Voters</h3>
+
+<p id="adminVoters">
+0
+</p>
+
+</div>
+
+<div class="stat">
+
+<h3>Total Votes</h3>
+
+<p id="adminVotes">
+0
+</p>
+
+</div>
+
+<div class="stat">
+
+<h3>Participation</h3>
+
+<p id="adminParticipation">
+0%
+</p>
+
+</div>
+
+</div>
+
+
+<h2>Candidate Results</h2>
+
+<br>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Candidate</th>
+<th>Party</th>
+<th>Votes</th>
+
+</tr>
+
+</thead>
+
+<tbody id="adminResults">
+
+</tbody>
+
+</table>
+
+</div>
+
+
+</main>
+
+</section>
+
+
+<!-- ================= CONFIRM MODAL ================= -->
+
+<div
+id="voteModal"
+class="modal hidden"
+>
+
+<div class="modal-box">
+
+<span
+class="close"
+onclick="closeVoteModal()"
+>
+×
+</span>
+
+<h2>Confirm Your Vote</h2>
+
+<br>
+
+<p id="selectedCandidate"></p>
+
+<br>
+
+<p>
+Are you sure you want to vote for this candidate?
+</p>
+
+<br>
+
+<button
+class="primary-btn"
+onclick="confirmVote()"
+>
+Confirm Vote
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ================= DATA ================= */
+
+let candidates = [
+
+{
+id:1,
+name:"Arjun Kumar",
+party:"Progressive Party",
+symbol:"🌳",
+votes:0
+},
+
+{
+id:2,
+name:"Priya Sharma",
+party:"People's Alliance",
+symbol:"⭐",
+votes:0
+},
+
+{
+id:3,
+name:"Rahul Reddy",
+party:"Development Front",
+symbol:"🚲",
+votes:0
+},
+
+{
+id:4,
+name:"Sneha Rao",
+party:"National Reform Party",
+symbol:"🌸",
+votes:0
+}
+
+];
+
+
+let users =
+JSON.parse(localStorage.getItem("voteUsers"))
+||
+[
+
+{
+name:"Admin",
+email:"admin@votesecure.com",
+voterId:"ADMIN001",
+password:"admin123",
+phone:"",
+hasVoted:false
+}
+
+];
+
+
+let currentUser =
+JSON.parse(
+localStorage.getItem("voteCurrentUser")
+)
+|| null;
+
+
+let votes =
+JSON.parse(
+localStorage.getItem("voteCandidates")
+)
+|| candidates;
+
+
+let voteHistory =
+JSON.parse(
+localStorage.getItem("voteHistory")
+)
+|| [];
+
+
+let selectedCandidateId = null;
+
+
+/* ================= AUTH ================= */
+
+function showSignup(){
+
+document
+.getElementById("loginForm")
+.classList.add("hidden");
+
+document
+.getElementById("signupForm")
+.classList.remove("hidden");
+
+}
+
+
+function showLogin(){
+
+document
+.getElementById("signupForm")
+.classList.add("hidden");
+
+document
+.getElementById("loginForm")
+.classList.remove("hidden");
+
+}
+
+
+function togglePassword(id){
+
+let input =
+document.getElementById(id);
+
+input.type =
+input.type === "password"
+? "text"
+: "password";
+
+}
+
+
+function signup(){
+
+let name =
+document.getElementById("signupName")
+.value.trim();
+
+let email =
+document.getElementById("signupEmail")
+.value.trim();
+
+let voterId =
+document.getElementById("signupVoterId")
+.value.trim();
+
+let password =
+document.getElementById("signupPassword")
+.value;
+
+
+if(!name || !email || !voterId || !password){
+
+alert("Please fill all fields.");
+
+return;
+
+}
+
+
+if(users.some(u => u.email === email)){
+
+alert("Email already registered.");
+
+return;
+
+}
+
+
+if(users.some(u => u.voterId === voterId)){
+
+alert("Voter ID already exists.");
+
+return;
+
+}
+
+
+users.push({
+
+name,
+email,
+voterId,
+password,
+phone:"",
+hasVoted:false
+
+});
+
+
+saveUsers();
+
+
+alert("Registration successful!");
+
+showLogin();
+
+}
+
+
+function login(){
+
+let email =
+document.getElementById("loginEmail")
+.value.trim();
+
+let password =
+document.getElementById("loginPassword")
+.value;
+
+
+let user =
+users.find(
+u =>
+u.email === email &&
+u.password === password
+);
+
+
+if(!user){
+
+alert("Invalid login details.");
+
+return;
+
+}
+
+
+currentUser = user;
+
+
+localStorage.setItem(
+"voteCurrentUser",
+JSON.stringify(currentUser)
+);
+
+
+startApp();
+
+}
+
+
+function logout(){
+
+currentUser = null;
+
+localStorage.removeItem(
+"voteCurrentUser"
+);
+
+
+document
+.getElementById("app")
+.classList.add("hidden");
+
+document
+.getElementById("authPage")
+.classList.remove("hidden");
+
+}
+
+
+/* ================= START ================= */
+
+function startApp(){
+
+if(!currentUser)
+return;
+
+
+document
+.getElementById("authPage")
+.classList.add("hidden");
+
+document
+.getElementById("app")
+.classList.remove("hidden");
+
+
+document
+.getElementById("userName")
+.innerText =
+"Hi, " + currentUser.name;
+
+
+loadProfile();
+
+renderCandidates();
+
+renderResults();
+
+renderHistory();
+
+updateDashboard();
+
+updateAdmin();
+
+}
+
+
+/* ================= NAVIGATION ================= */
+
+function showPage(page){
+
+document
+.querySelectorAll(".page")
+.forEach(
+p => p.classList.remove("active")
+);
+
+
+document
+.getElementById(page)
+.classList.add("active");
+
+
+if(page === "vote")
+renderCandidates();
+
+if(page === "results")
+renderResults();
+
+if(page === "history")
+renderHistory();
+
+if(page === "admin")
+updateAdmin();
+
+}
+
+
+/* ================= CANDIDATES ================= */
+
+function renderCandidates(){
+
+let search =
+document
+.getElementById("candidateSearch")
+.value
+.toLowerCase();
+
+
+let list =
+votes.filter(
+candidate =>
+candidate.name
+.toLowerCase()
+.includes(search)
+);
+
+
+let html = "";
+
+
+list.forEach(candidate => {
+
+let disabled =
+currentUser.hasVoted
+? "disabled"
+: "";
+
+
+html += `
+
+<div class="candidate">
+
+<div class="candidate-symbol">
+
+${candidate.symbol}
+
+</div>
+
+<h3>
+${candidate.name}
+</h3>
+
+<p class="party">
+${candidate.party}
+</p>
+
+<button
+class="vote-btn"
+${disabled}
+onclick="openVoteModal(${candidate.id})"
+>
+
+${currentUser.hasVoted
+? "Already Voted"
+: "Vote for Candidate"}
+
+</button>
+
+</div>
+
+`;
+
+});
+
+
+document
+.getElementById("candidateGrid")
+.innerHTML =
+html;
+
+}
+
+
+/* ================= VOTE ================= */
+
+function openVoteModal(id){
+
+if(currentUser.hasVoted){
+
+alert("You have already voted.");
+
+return;
+
+}
+
+
+selectedCandidateId = id;
+
+
+let candidate =
+votes.find(
+c => c.id === id
+);
+
+
+document
+.getElementById("selectedCandidate")
+innerHTML =
+
+`
+<strong>
+${candidate.symbol}
+${candidate.name}
+</strong>
+
+<br>
+
+Party:
+${candidate.party}
+`;
+
+
+document
+.getElementById("voteModal")
+.classList.remove("hidden");
+
+}
+
+
+function closeVoteModal(){
+
+document
+.getElementById("voteModal")
+.classList.add("hidden");
+
+selectedCandidateId = null;
+
+}
+
+
+function confirmVote(){
+
+if(currentUser.hasVoted){
+
+alert("You have already voted.");
+
+closeVoteModal();
+
+return;
+
+}
+
+
+let candidate =
+votes.find(
+c => c.id === selectedCandidateId
+);
+
+
+if(!candidate){
+
+return;
+
+}
+
+
+candidate.votes++;
+
+
+currentUser.hasVoted = true;
+
+
+let userIndex =
+users.findIndex(
+u => u.email === currentUser.email
+);
+
+
+users[userIndex] =
+currentUser;
+
+
+voteHistory.push({
+
+voterId:currentUser.voterId,
+
+candidateId:candidate.id,
+
+candidateName:candidate.name,
+
+date:new Date().toLocaleString()
+
+});
+
+
+saveAll();
+
+
+closeVoteModal();
+
+
+renderCandidates();
+
+renderResults();
+
+renderHistory();
+
+updateDashboard();
+
+updateAdmin();
+
+
+alert(
+"✅ Your vote has been recorded successfully!"
+);
+
+
+}
+
+
+/* ================= RESULTS ================= */
+
+function renderResults(){
+
+let total =
+votes.reduce(
+(sum,c) => sum + c.votes,
+0
+);
+
+
+let html = "";
+
+
+votes.forEach(candidate => {
+
+let percentage =
+total === 0
+? 0
+: (candidate.votes / total) * 100;
+
+
+html += `
+
+<div class="result-card">
+
+<h3>
+
+${candidate.symbol}
+${candidate.name}
+
+</h3>
+
+<p>
+${candidate.party}
+</p>
+
+<p>
+<strong>
+${candidate.votes} votes
+</strong>
+</p>
+
+<div class="progress">
+
+<div
+class="progress-bar"
+style="width:${percentage}%"
+>
+</div>
+
+</div>
+
+<p>
+${percentage.toFixed(1)}%
+</p>
+
+</div>
+
+`;
+
+});
+
+
+document
+.getElementById("resultsContainer")
+.innerHTML =
+html;
+
+}
+
+
+/* ================= HISTORY ================= */
+
+function renderHistory(){
+
+let container =
+document
+.getElementById("historyContainer");
+
+
+let history =
+voteHistory.filter(
+h =>
+h.voterId ===
+currentUser.voterId
+);
+
+
+if(history.length === 0){
+
+container.innerHTML =
+
+`
+<div class="result-card">
+
+<p>
+You have not voted yet.
+</p>
+
+</div>
+`;
+
+return;
+
+}
+
+
+container.innerHTML =
+history.map(
+h => `
+
+<div class="result-card">
+
+<h3>
+🗳️ Vote Recorded
+</h3>
+
+<p>
+Candidate:
+<strong>
+${h.candidateName}
+</strong>
+</p>
+
+<p>
+Date:
+${h.date}
+</p>
+
+</div>
+
+`
+).join("");
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function updateDashboard(){
+
+let totalVoters =
+users.length - 1;
+
+
+let totalVotes =
+votes.reduce(
+(sum,c) =>
+sum + c.votes,
+0
+);
+
+
+let participation =
+totalVoters === 0
+? 0
+: (totalVotes / totalVoters) * 100;
+
+
+document
+.getElementById("totalVoters")
+.innerText =
+totalVoters;
+
+
+document
+.getElementById("totalVotes")
+.innerText =
+totalVotes;
+
+
+document
+.getElementById("candidateCount")
+.innerText =
+votes.length;
+
+
+document
+.getElementById("participation")
+.innerText =
+participation.toFixed(1) + "%";
+
+}
+
+
+/* ================= PROFILE ================= */
+
+function loadProfile(){
+
+document
+.getElementById("profileName")
+.value =
+currentUser.name;
+
+
+document
+.getElementById("profileEmail")
+.value =
+currentUser.email;
+
+
+document
+.getElementById("profileVoterId")
+.value =
+currentUser.voterId;
+
+
+document
+.getElementById("profilePhone")
+.value =
+currentUser.phone || "";
+
+}
+
+
+function saveProfile(){
+
+currentUser.name =
+document
+.getElementById("profileName")
+.value;
+
+
+currentUser.phone =
+document
+.getElementById("profilePhone")
+.value;
+
+
+let index =
+users.findIndex(
+u =>
+u.email === currentUser.email
+);
+
+
+users[index] =
+currentUser;
+
+
+saveUsers();
+
+
+localStorage.setItem(
+"voteCurrentUser",
+JSON.stringify(currentUser)
+);
+
+
+document
+.getElementById("userName")
+.innerText =
+"Hi, " + currentUser.name;
+
+
+alert("Profile updated!");
+
+}
+
+
+function changePassword(){
+
+let password =
+prompt("Enter new password:");
+
+
+if(!password)
+return;
+
+
+currentUser.password =
+password;
+
+
+let index =
+users.findIndex(
+u =>
+u.email === currentUser.email
+);
+
+
+users[index] =
+currentUser;
+
+
+saveUsers();
+
+
+localStorage.setItem(
+"voteCurrentUser",
+JSON.stringify(currentUser)
+);
+
+
+alert(
+"Password changed successfully!"
+);
+
+}
+
+
+/* ================= ADMIN ================= */
+
+function updateAdmin(){
+
+let voters =
+users.length - 1;
+
+
+let totalVotes =
+votes.reduce(
+(sum,c) =>
+sum + c.votes,
+0
+);
+
+
+let participation =
+voters === 0
+? 0
+: totalVotes / voters * 100;
+
+
+document
+.getElementById("adminVoters")
+.innerText =
+voters;
+
+
+document
+.getElementById("adminVotes")
+.innerText =
+totalVotes;
+
+
+document
+.getElementById("adminParticipation")
+.innerText =
+participation.toFixed(1) + "%";
+
+
+document
+.getElementById("adminResults")
+.innerHTML =
+
+votes.map(
+candidate => `
+
+<tr>
+
+<td>
+${candidate.symbol}
+${candidate.name}
+</td>
+
+<td>
+${candidate.party}
+</td>
+
+<td>
+${candidate.votes}
+</td>
+
+</tr>
+
+`
+).join("");
+
+}
+
+
+/* ================= COUNTDOWN ================= */
+
+let electionEnd =
+new Date();
+
+electionEnd.setDate(
+electionEnd.getDate() + 3
+);
+
+
+function updateCountdown(){
+
+let now =
+new Date().getTime();
+
+let distance =
+electionEnd.getTime() - now;
+
+
+if(distance <= 0){
+
+document
+.getElementById("countdown")
+.innerText =
+"Election Closed";
+
+return;
+
+}
+
+
+let days =
+Math.floor(
+distance /
+(1000*60*60*24)
+);
+
+
+let hours =
+Math.floor(
+(distance %
+(1000*60*60*24))
+/
+(1000*60*60)
+);
+
+
+let minutes =
+Math.floor(
+(distance %
+(1000*60*60))
+/
+(1000*60)
+);
+
+
+let seconds =
+Math.floor(
+(distance %
+(1000*60))
+/
+1000
+);
+
+
+document
+.getElementById("countdown")
+.innerText =
+
+`${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+}
+
+
+setInterval(
+updateCountdown,
+1000
+);
+
+updateCountdown();
+
+
+/* ================= DARK MODE ================= */
+
+function toggleDark(){
+
+document
+.body
+.classList
+.toggle("dark");
+
+
+localStorage.setItem(
+"voteDark",
+document
+.body
+.classList
+.contains("dark")
+);
+
+}
+
+
+if(
+localStorage.getItem("voteDark")
+===
+"true"
+){
+
+document
+.body
+.classList
+.add("dark");
+
+}
+
+
+/* ================= STORAGE ================= */
+
+function saveUsers(){
+
+localStorage.setItem(
+"voteUsers",
+JSON.stringify(users)
+);
+
+}
+
+
+function saveAll(){
+
+saveUsers();
+
+
+localStorage.setItem(
+"voteCandidates",
+JSON.stringify(votes)
+);
+
+
+localStorage.setItem(
+"voteHistory",
+JSON.stringify(voteHistory)
+);
+
+
+localStorage.setItem(
+"voteCurrentUser",
+JSON.stringify(currentUser)
+);
+
+}
+
+
+/* ================= STARTUP ================= */
+
+if(currentUser){
+
+startApp();
+
+}
+
+</script>
+
+</body>
+</html>
